@@ -33,4 +33,28 @@ Before writing OOP code there are two more steps. **Object Oriented Analysis** a
 ### Finally Object Oriented Programming, what is it?
 - It is the process of converting a design that came out from OOD stage,  into a working program.
 
+### Objects and Classes
+**Class**: In object oriented modeling, Class is the blueprint for object(s). A Class has set of *attributes* and *methods*. The attribute defines the properties of the object of that class and methods are the behaviors or actions that we can perform on that object.
 
+>For example: an Orange is an object of Orange class which has attributes such as colour and weight. and method such as *make juice* which defines an action we can perform on the Orange type object.
+
+**Object**: Object on the other hand is an instance of the class. 
+
+>For example: You might have three oranges on table. Each of these oranges is distinct object, but all three have attributes and behaviors associated with one class i.e, the general class of orange (the blueprint).
+
+##### OBJECTS ARE INSTANCES OF CLASSES THAT CAN BE ASSOCIATED WITH EACH OTHER.
+Let's take two objects each of different classes, object *orange* from Orange class and object *basket* from Basket class. Object of Orange class can be put in Object of Basket class. This relation between two objects is called **association**.
+
+
+##### DATA DESCRIBES THE STATE OF OBJECT.
+Data represents the individual characteristics of a certain object. Any specific object can have different data values for the given characteristics. 
+
+>For example: The three oranges on our table could each weigh a different amount. The orange class could have a weight to represent that data. All instances of the orange class have weight attribute, but each orange has a different value for this attribute. Attributes don't have to be unique, though; any two oranges may weigh the same amount.
+
+**Atrributes** are referred to as members or properties. We can also call an attribute **instance variable**. Since, they are variables for each instance of a class.
+
+##### BEHAVIORS ARE ACTIONS.
+**Behaviors** are actions that can occur on an object. The behaviors that can be performed on a specific class of object are expressed as the **methods** of the class.
+- methods are like functions in structured programming, but they have access to the attributes.
+- methods can also accept parameters and return values.
+- The actual object instances that are passed into a method during a specific invocation are usually referred to as **arguments**.
