@@ -76,6 +76,9 @@ Abstraction in object oriented modelling means dealing with the level of detail 
 The figure below shows the two abstraction levels for car:
 ![Alt text](./images/abstraction.jpeg?web=raw "abstraction_levels")
 
+It is possible to make an abstraction class that does not implement any methods at all. Such a class would simply tell us what the class should do, but provides absolutely no advice on how to do it. These purely abstract classes are called **interfaces**.
+
+
 ### Relationships
 There are three types of relationships in object oriented modelling. The level of abstractions are defined by these relationships.
 - Composition
@@ -108,7 +111,17 @@ Similarly, In object-oriented programming, instead of inheriting features and be
 The figure below depicts how the six types of pieces can inherit from a Piece class:
 ![Alt text](./images/inheritance.jpeg?web=raw "inheritance")
 
-The hollow arrows indicate that the individual classes of pieces inherit from the **Piece** class. All the child classes automatically have a *chess_set* and *color* attribute inherited from the base class **Piece**. Each piece provides a different shape property and a different move method to move the piece to a new position.
+The hollow arrows indicate that the individual classes of pieces inherit from the **Piece** class. All the child classes automatically have a **chess_set** and **color** attribute inherited from the base class **Piece**. Each piece provides a different **shape** property and a different **move** method to move the piece to a new position.
+
+### Multiple Inheritance
+A simple example to understand **Multiple Inheritance**, When strangers tell a proud mother that her son has *his father's eyes*, she will typically respond along the lines of, *yes, but he got my nose*. This is multiple inheritance, *where a child inherits different features from both of his parents.*
+
+Similarly, in object oriented programming, multiple inheritance allows a **subclass** to inherit functionality and attributes from **multiple parent classes**. 
+
+#### But...
+Multiple Inheritance can be a tricky business, there is no harm in using it, if the two parent classes the subclass is inheriting functionality and attributes from are **distinct**. But if the parent classes are not distinct, i.e., if both of the parent classes have same **method(s)** or **attribute(s)**, then the subclass will get confuse which method to inherit from which parent class or which attribute to inherit from which parent class.
+ 
+
 
 
 
