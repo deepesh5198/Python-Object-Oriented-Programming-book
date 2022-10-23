@@ -75,3 +75,9 @@ Abstraction in object oriented modelling means dealing with the level of detail 
 
 The figure below shows the two abstraction levels for car:
 ![Alt text](./images/abstraction.jpeg?web=raw "abstraction_levels")
+
+### Relationships
+There are three types of relationships in object oriented modelling. 
+- Composition
+- Aggregation
+- Inheritance
