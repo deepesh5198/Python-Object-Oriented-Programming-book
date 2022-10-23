@@ -58,3 +58,20 @@ Data represents the individual characteristics of a certain object. Any specific
 - methods are like functions in structured programming, but they have access to the attributes.
 - methods can also accept parameters and return values.
 - The actual object instances that are passed into a method during a specific invocation are usually referred to as **arguments**.
+
+##### HIDING DETAILS AND CREATING THE PUBLIC INTERFACE
+The key purpose of modeling an object in object-oriented design is to determine what the public interface of that object will be. 
+
+The **interface** is the collection of attributes and methods that other objects can access to interact with that object. Other objects do not need, and in some languages are not allowed, to access the internal workings of the object.
+
+**Encapsulation**: The process of hiding the implementation of an object is suitably called information hiding and is also known as encapsulation.
+
+>A common real-world example is the television. Our interface to the television is the remote control. Each button on the remote control represents a method that can be called on the television object. When we, as the calling object, access these methods. When we press volume buttons to adjust volume on TV, we do not care what electronic signals are being sent to adjust the volume, or whether the sound is destined for speakers or headphones etc.
+
+#### Abstraction
+Abstraction in object oriented modelling means dealing with the level of detail that is most appropriate to a given task. It is the process of extracting a public interface from the inner details.
+
+>For Example: A car's driver needs to interact with the steering, accelerator, and brakes. The workings of the motor, drive train, and brake subsystem don't matter to the driver. A mechanic, on the other hand, works at a different level of abstraction, tuning the engine and bleeding the brakes.
+
+The figure below shows the two abstraction levels for car:
+![Alt text](./images/abstraction.jpeg?web=raw "abstraction_levels")
