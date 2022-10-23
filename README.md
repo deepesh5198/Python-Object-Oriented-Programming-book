@@ -77,7 +77,38 @@ The figure below shows the two abstraction levels for car:
 ![Alt text](./images/abstraction.jpeg?web=raw "abstraction_levels")
 
 ### Relationships
-There are three types of relationships in object oriented modelling. 
+There are three types of relationships in object oriented modelling. The level of abstractions are defined by these relationships.
 - Composition
 - Aggregation
 - Inheritance
+
+### Composition
+Composition is the act of collecting several objects together to create a new one. 
+> For Example: A car is composed of an engine, transmission, starter, headlights, and windshield, among numerous other parts. The engine, in turn, is composed of pistons, a crank shaft, and valves etc.
+
+The above example, composition is good way to provide level of abstraction. The *Car* object can provide the interface required by the driver, and the *Engine* object can provide the interface for the mechanic.
+
+### Aggregation
+Aggregation is almost exactly like composition. The difference is that aggregate objects can exist independently.
+
+To know the difference between Aggregation and Composition see this example:
+>Example: In a chess game, it would be impossible for a position to be associated with a different chess board, so we say the board is **composed** of positions. But the pieces, which might exist *independently* of the chess set, are said to be in an **aggregate** relationship with that set.
+
+Another way to differentiate between aggregation and composition is to think about the lifespan of the object:
+- If the composite (outside) object controls when the related (inside) objects are created and destroyed, composition is most suitable.
+
+- If the related object is created independently of the composite object, or can outlast that object, an aggregate relationship makes more sense.
+
+### Inheritance
+Inheritance is sort of like a family tree. My name is Deepesh. My grandfather's last name was Yadav, and my father inherited that name. I inherited it from him. 
+Similarly, In object-oriented programming, instead of inheriting features and behaviors from a person, one class can inherit attributes and methods from another class.
+
+>For example, there are 32 chess pieces in a chess set, but there are only six different types of pieces (pawns, rooks, bishops, knights, king, and queen), each of which behaves differently when it is moved. All of these classes of piece have properties, such as color and the chess set they are part of, they also have unique shapes, and different moves.
+
+The figure below depicts how the six types of pieces can inherit from a Piece class:
+![Alt text](./images/inheritance.jpeg?web=raw "inheritance")
+
+The hollow arrows indicate that the individual classes of pieces inherit from the **Piece** class. All the child classes automatically have a *chess_set* and *color* attribute inherited from the base class **Piece**. Each piece provides a different shape property and a different move method to move the piece to a new position.
+
+
+
