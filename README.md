@@ -120,8 +120,78 @@ Similarly, in object oriented programming, multiple inheritance allows a **subcl
 
 #### But...
 Multiple Inheritance can be a tricky business, there is no harm in using it, if the two parent classes the subclass is inheriting functionality and attributes from are **distinct**. But if the parent classes are not distinct, i.e., if both of the parent classes have same **method(s)** or **attribute(s)**, then the subclass will get confuse which method to inherit from which parent class or which attribute to inherit from which parent class.
+
+<a name = "chapter2">
+<h1>Chapter 2 - Objects in Python</h1>
+</a>
  
+ In this chapter we will learn:
+ - Type Hints
+ - Creating Classes
+ - Instantiating Objects
+ - Organizing Classes into Packages and Modules
+
+### Type Hints
+Type hints is a feature of Python that allows you to explicitly declare the data type of a variable when declaring it. 
+
+#### How to write Type Hints and Type check?
+Writing type hints is a very simple task. See the code below for example:
+
+```python
+    def odd(n : int) -> bool:
+        return n%2 != 0
+
+    def main():
+        print(odd(2))
+
+    if __name__ == "__main__":
+        main()
+```
+
+In the above code, "n : int" is a type hint and the "-> bool" is also a type hint. It explicitly declares that (n) is *"int"* type and the return type of the *odd* function is *"bool"* type.
+
+Thats it, this is how type hints are written.
 
 
+#### Type checking using ***mypy***
+Type checking is the process of checking type of variables in program with the associated type hints if given. This helps a lot when we are debugging our program. Now, let's see how type checking is done.
 
+For this let's take the following erroneous code:
 
+```python
+    # erroneous_code.py
+    def odd(n : int) -> bool:
+        return n%2 != 0
+
+    def main():
+        print(odd("Hello World"))
+
+    if __name__ == "__main__":
+        main()
+```
+The code is same as above, but with one little change, in the odd function we are passing a *str* type that is "Hello World" its going to show an error. But with the type hints, we can simply just look at the code and tell, the odd function takes **int** type input and returns a **bool** type.
+
+But even if we are not able to find what's wrong with the program. We can use the ***mypy*** library to check the type hints, the ***mypy*** tool helps in checking the type hints for consistancy.
+
+For that, we need to install ***mypy*** library. Just simply write this code in command prompt.
+```
+    pip install mypy
+```
+
+NOTE: Be sure to activate your virtual environment before installing this library.
+
+After installing the mypy library, simply write the following code in command prompt terminal.
+
+```
+    $ mypy --strict your/path/to/erroneous_code.py
+```
+
+The output of the above code is as follows:
+```console
+    (approach_ml) C:\Users\OOP>mypy --strict erorneous_code.py
+    erorneous_code.py:4: error: Function is missing a return type annotation
+    erorneous_code.py:4: note: Use "-> None" if function does not return a value
+    erorneous_code.py:5: error: Argument 1 to "odd" has incompatible type "str"; expected "int"
+    erorneous_code.py:9: error: Call to untyped function "main" in typed context
+    Found 3 errors in 1 file (checked 1 source file)
+```
