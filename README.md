@@ -545,9 +545,9 @@ As a project grows into a collection of more and more modules, we may find that 
 We can store our modules (nothing but python files) in folders, these folders are called **packages**. 
 - A package is a collection of modules. 
 - The name of the package is the name of the folder
-- In order to tell python that a folder is a package, simply place an empty **__init__.py** file in the folder.
+- In order to tell python that a folder is a package, simply place an empty `__init__.py` file in the folder.
 
-Suppose we have modules related to ecommerce, such as products, database etc. We can store them in a folder named "ecommerce" and place an empty **__init__.py** file in it to make it a package.
+Suppose we have modules related to ecommerce, such as products, database etc. We can store them in a folder named "ecommerce" and place an empty `__init__.py` file in it to make it a package.
 
 Now we can do the following:
 ```py
@@ -577,8 +577,10 @@ Most OOP language have a concept of access control, which is related to abstract
 
 Python doesn't do this, in python, all methods and attributes are publically available. If we want to suggest a method should not be used publically, we can put a note in doctring of that method indicating that the method is for internal use only.
 
-- To make an attribute or method private, conventionally we can prefx the attribute with an underscore "_". Which indicates the attribute is private. But nothing stops you from using it.
+- To make an attribute or method private, conventionally we can prefx the attribute with an underscore "_". Which indicates the attribute or method is private. But nothing stops you from using it.
 
-- To make an attribute or method strongly private, to indicate that outside objects don't access a property or method: simply prefix it with a double underscores "__". This will perform **name mangling** on an attribute or method. **Name mangling** means that the method can still be called by outside objects if they really want to do so, but it requires extra work and is a strong indicator that you demand that your attribute remains **private**.
+- To make an attribute or method strongly private, to indicate that outside objects don't access a property or method: simply prefix it with a double underscores "__". This will perform **name mangling** on an attribute or method.
+
+**Name mangling** means that the method can still be called by outside objects if they really want to do so, but it requires extra work and is a strong indicator that you demand that your attribute remains **private**.
 
 
