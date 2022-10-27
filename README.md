@@ -562,12 +562,23 @@ We can import code that appears to come directly from a package, as opposed to a
 
 In this example, we have an ecommerce package containing two module files named "database.py" and "products.py". The database module contains a `db` variable that is accessed from a lot of places. Wouldn't it be convenient if this could be imported as `from ecommerce import db` instead of `from ecommerce.database import db`?
 
-Remember the __init__.py file that defines a directory as a package? This file can contain any variable or class declarations we like, and they will be available as part of the package. In our example, if the ecommerce/__init__.py file contained the following line:
+Remember the `__init__.py` file that defines a directory as a package? This file can contain any variable or class declarations we like, and they will be available as part of the package. In our example, if the `ecommerce/__init__.py` file contained the following line:
 ```python
     # the __init__.py file in ecommerce
     from .database import db
 ```
 We could then access the `db` attribute from "main.py" or any other file using the following import:
 ```python
+    # main.py
     from ecommerce import db
 ```
+### Who can access my data?
+Most OOP language have a concept of access control, which is related to abstraction. Some attributes and methods on an object are marked as *private* meaning only that object can access them, others are marked as *protected* which means only that class and any subclasses have access. The rest are public, meaning any other object is allowed to access them.
+
+Python doesn't do this, in python, all methods and attributes are publically available. If we want to suggest a method should not be used publically, we can put a note in doctring of that method indicating that the method is for internal use only.
+
+- To make an attribute or method private, conventionally we can prefx the attribute with an underscore "_". Which indicates the attribute is private. But nothing stops you from using it.
+
+- To make an attribute or method strongly private, to indicate that outside objects don't access a property or method: simply prefix it with a double underscores "__". This will perform **name mangling** on an attribute or method. **Name mangling** means that the method can still be called by outside objects if they really want to do so, but it requires extra work and is a strong indicator that you demand that your attribute remains **private**.
+
+
