@@ -187,11 +187,11 @@ After installing the mypy library, simply write the following code in command pr
 ```
 
 The output of the above code is as follows:
-```console
-    (approach_ml) C:\Users\OOP>mypy --strict erorneous_code.py
-    erorneous_code.py:4: error: Function is missing a return type annotation
-    erorneous_code.py:4: note: Use "-> None" if function does not return a value
-    erorneous_code.py:5: error: Argument 1 to "odd" has incompatible type "str"; expected "int"
-    erorneous_code.py:9: error: Call to untyped function "main" in typed context
-    Found 3 errors in 1 file (checked 1 source file)
+```cmd
+(approach_ml) C:\Users\Hems\OOP>mypy --strict erroneous_code.py
+erroneous_code.py:4: error: Function is missing a return type annotation
+erroneous_code.py:4: note: Use "-> None" if function does not return a value
+erroneous_code.py:5: error: Argument 1 to "odd" has incompatible type "str"; expected "int"
+erroneous_code.py:9: error: Call to untyped function "main" in typed context
+Found 3 errors in 1 file (checked 1 source file)
 ```
