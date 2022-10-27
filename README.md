@@ -127,7 +127,7 @@ Multiple Inheritance can be a tricky business, there is no harm in using it, if 
  
  In this chapter we will learn:
  - Type Hints
- - Creating Classes
+ - Creating Python Classes
  - Instantiating Objects
  - Organizing Classes into Packages and Modules
 
@@ -195,3 +195,150 @@ The output of the above code is as follows:
     erroneous_code.py:9: error: Call to untyped function "main" in typed context
     Found 3 errors in 1 file (checked 1 source file)
 ```
+
+Here are the two problems:
+- At line 4: The main() function doesn't have a return type; mypy suggests including "-> None" to make the absence of a return value perfectly explicit.
+- More important is line 5: the code will try to evaluate the odd() function using a str value. This doesn't match the type hint for "odd()" and indicates another possible error.
+
+### Creating Python Classes
+Creating classes in python is very easy. For example see the code below:
+
+```python
+    class MyFirstClass:
+        pass
+```
+- The class definition starts with the `class` keyword.
+- The name of the class is written in CamelCase i.e., the first letter of each word in the class name should be capital. For example: MyFirstClass, the M, F and C are capital.
+
+#### Instantiating objects of class
+```python
+    # define a class
+    class MyFirstClass:
+        pass
+
+    # instantiate objects of class
+    object1 = MyFirstClass()
+    object2 = MyFirstClass()
+```
+The above code creates two instances of `MyFirstClass`, if we print these two objects we can see the memory addresses of these.
+
+```python
+    # define a class
+    class MyFirstClass:
+        pass
+
+    # instantiate objects of class
+    object1 = MyFirstClass()
+    object2 = MyFirstClass()
+
+    # print objects
+    print(object1)
+    print(object2)
+```
+
+Output:
+```
+    <__main__.MyFirstClass object at 0xb7b7faec>
+    <__main__.MyFirstClass object at 0xb7b7fbac>
+
+```
+The above output confirms that the objects were instantiated successfully.
+
+#### EACH OBJECT OF THE SAME CLASS ARE DISTINCT
+The objects created from the same class are distinct objects. To confirm this see the code below:
+```python
+    # python objects are distinct
+    # define a class
+    class MyFirstClass:
+        pass
+
+    # instantiate objects of class
+    object1 = MyFirstClass()
+    object2 = MyFirstClass()
+
+    # check if the objects are same
+    return object1 is object2 
+```
+
+Output:
+```
+    False
+```
+The output is False which means the objects instantiated from same class or different class are never same ,i.e., they are distinct.
+
+### Adding Attributes
+See the code below:
+```python
+    # define a Point class
+    class Point:
+        pass
+
+    # instantiate two objects of class
+    p1 = Point()
+    p2 = Point()
+
+    # add attributes
+    p1.x = 5
+    p1.y = 4
+    p2.x = 3
+    p2.y = 6
+    print(p1.x, p1.y, sep=",") 
+    print(p2.x, p2.y, sep=",") 
+
+```
+In above code we used the `.` operator to give two attributes `x` and `y` to each object, like this, `<object>.<attribute> = <value>`.
+
+The output of the above code is as follows:
+```
+    5,4
+    3,6
+```
+
+### Adding Methods to the Class
+A **method** as discussed earlier is a behavior that is applies on the object of the class. Let's define a "reset()" method in our `Point` class which will reset the coordinates of the point.
+
+```python
+    # define a Point class
+    class Point:
+        # define a reset method
+        def reset(self):
+            # reset coordinates to 0
+            self.x = 0
+            self.y = 0
+
+    # instantiate two objects of class
+    p1 = Point()
+    p2 = Point()
+
+    # add attributes
+    p1.x = 5
+    p1.y = 4
+    p2.x = 3
+    p2.y = 6
+    print(p1.x, p1.y, sep=",") 
+    print(p2.x, p2.y, sep=",")
+    print("--------")
+    # call reset method on 
+    # p1 object
+    p1.reset()
+    print(p1.x, p1.y, sep=",") 
+    print(p2.x, p2.y, sep=",")
+
+```
+Output of the above code is as follows:
+```
+    5,4
+    3,6
+    --------
+    0,0
+    3,6
+```
+As we can see, the `reset()` method successfully reset the coordinates of Point object `p1`.
+
+### What is ***self***?
+- One difference between a simple function and a method is, methods have one required argument. This argument is conventionally named `self`.
+- The `self` argument to a method is a reference to the object that the method is being invoked on.
+- The object is an instance of a class, and this `self` is sometimes called the **instance variable**.
+- We can access attributes and methods of an object via this instance variable `self`.
+
+
