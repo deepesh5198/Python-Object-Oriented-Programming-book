@@ -338,7 +338,236 @@ As we can see, the `reset()` method successfully reset the coordinates of Point 
 ### What is ***self***?
 - One difference between a simple function and a method is, methods have one required argument. This argument is conventionally named `self`.
 - The `self` argument to a method is a reference to the object that the method is being invoked on.
-- The object is an instance of a class, and this `self` is sometimes called the **instance variable**.
+- The object is an instance of a class, and `self` is sometimes called the **instance variable**.
 - We can access attributes and methods of an object via this instance variable `self`.
 
+### Adding More Arguments
+To learn how to pass multiple arguments to a method, Let's add a new method to our `Point` class that will allows us to move a point to an arbitrary position, not just to the origin. We can also include a method that accepts another `Point` object as input and returns the distance between them:
 
+```python
+    class Point:
+    
+    # move method to move point
+    # to a given position
+    def move(self, x: float, y: float) -> None:
+        self.x = x
+        self.y = y
+
+    def reset(self) -> None:
+        self.move(0, 0)
+
+    def calculate_distance(self, point2: "Point") -> float:
+        # calculate euclidean distance between points
+        return ((self.x - point2.x)**2 + (self.y - point2.y)**2)**0.5
+
+    point1 = Point()
+    point2 = Point()
+    
+    # initialize coordinates
+    # of point1 at origin
+    # point1.x == 0, point2.y == 0
+    point1.reset()
+
+    # move point2 to 
+    # given position
+    point2.move(x = 5, y = 0)
+    
+    # calculate distance of
+    # point2 from point1
+    print(point1.calculate_distance(point2))
+```
+Output of the above program is as follows:
+```
+    5.0
+```
+### Initializing Objects
+Most object-oriented programming languages have the concept of a constructor, a special method that creates and initializes the object when it is created. 
+
+Python is a little different; it has a constructor and an initializer. The constructor method, `__new__()` and the initializer method, `__init__()`.
+
+Though, the `__new__()` method is rarely used, so lets talk about `__init__()`
+
+Let's add an initialization function on our `Point` class that requires the user to supply `x` and `y` coordinates when the Point object is instantiated:
+
+```python
+    class Point:
+        # the initializer method
+        def __init__(self, x: float, y: float) -> None:
+            self.move(x, y)
+
+        # move method to move point
+        # to a given position
+        def move(self, x: float, y: float) -> None:
+            self.x = x
+            self.y = y
+
+        def reset(self) -> None:
+            self.move(0, 0)
+
+        def calculate_distance(self, point2: "Point") -> float:
+            # calculate euclidean distance between points
+            return ((self.x - point2.x)**2 + (self.y - point2.y)**2)**0.5
+
+        point1 = Point(3,4)
+        print(point1.x, point1.y)
+```
+You can see, since we used the `__init__()` method, we passed the arguments while instantiating object. And we are forced to pass this arguments, otherwise the program throws a `not enough arguments` error
+
+To avoid this requirement of manually passing the arguments, we can give the parameters in `__init__()` method some default values. such as:
+
+```python
+    class Point:
+        # the initializer method
+        def __init__(self, x: float = 0, y: float = 0) -> None:
+            self.move(x, y)
+```
+
+### Writing Docstrings
+When carrying out object-oriented programming, it is important to write API documentation that clearly summarizes what each object and method does.
+
+This is done with the help of **docstrings**,
+```python
+    # example for docstrings
+    class Point:
+        """ 
+        Represents a point in 2-d geometric coordinates
+        """
+        # the initializer method
+        def __init__(self, x: float = 0, y: float = 0) -> None:
+            """ 
+            A method to initialize the position of a new point
+            x and y coordinates are specified, if they are not, then
+            point defauts to origin
+            
+            :param x: float x-coordinate
+            :param y: float y-coordinate
+            """
+            self.move(x, y)
+        def move(self, x: float, y: float) -> None:
+            """
+            Move the point to a new location in 2-d space.
+            :param x: float x-coordinate
+            :param y: float y-coordinate
+            """
+            self.x = x
+            self.y = y
+
+```
+In above code, the lines of texts written in `"""` (triple quotes), is docstring.
+- Make sure to write docstrings following PEP8 style guide, (the line length should not exceed more than 80 words in a single line)
+
+- Hence, they are written in `"""` triple quotes because docstrings can span multiple lines.
+
+### Modules and Packages
+**Module** in python is nothing but a python file, any pyhton file can be called a module. We can load the class from one module to use in the other module.
+
+- A modules name is the name of python file without ".py" suffix.
+- a file named `model.py` is a module named `model`
+- the `import` statement is used for importing modules or specific classes or functions from module.
+
+Let's understand it with the following example:
+
+This python file will act as a module for the other python file
+```py
+    # printhello.py
+    class PrintHello:
+        def print_hello_world(self):
+            print("Hello World")
+```
+
+The other python file
+```py
+    # myprogram.py
+
+    # importing the printhello module
+    import printhello
+
+    # accessing the class of printhello module
+    # and instatiating the object of PrintHello class
+    obj = printhello.PrintHello()
+
+    # calling print_hello_world method
+    # on obj
+    obj.print_hello_world()
+```
+
+Output:
+```
+    "Hello World"
+```
+In the above example, we accessed the `PrintHello` class using the `printhello.<something>` notation.
+
+We can also alternatively write the above code as follows:
+The other python file
+```py
+    # myprogram.py
+
+    # importing the printhello module
+    from printhello import PrintHello
+
+    # accessing the class of printhello module
+    # and instatiating the object of PrintHello class
+    obj = PrintHello()
+
+    # calling print_hello_world method
+    # on obj
+    obj.print_hello_world()
+```
+In the above code we used `from...import` syntax. And it will also give the same output.
+
+#### Creating alias to avoid confusion
+Suppose, we have two modules that have a class with same name, but both have different attributes and methods. And we want to use both for different purpose in our program. In that case using **alias** can avoid confusion.
+
+For example:
+```python
+    # importing PrintHello classes from
+    # two different modules
+    from greetings import PrintHello as PH
+    from printhello import PrintHello
+
+    # initiating object of PrintHello
+    # from greetings module
+    greet = PH()
+
+    # initiating object of PrintHello
+    # from printhello module
+    hello = PrintHello()
+```
+
+We can also import more than one classes or methods from same module as follows:
+```python
+    from sklearn.metrics import accuracy_score, f1_score, precision_score
+```
+
+### Organizing Modules
+As a project grows into a collection of more and more modules, we may find that we want to add another level of abstraction, some kind of nested hierarchy on our modules' levels.
+
+We can store our modules (nothing but python files) in folders, these folders are called **packages**. 
+- A package is a collection of modules. 
+- The name of the package is the name of the folder
+- In order to tell python that a folder is a package, simply place an empty **__init__.py** file in the folder.
+
+Suppose we have modules related to ecommerce, such as products, database etc. We can store them in a folder named "ecommerce" and place an empty **__init__.py** file in it to make it a package.
+
+Now we can do the following:
+```py
+    # main.py 
+    # importing Products class from product module from ecommerce package
+    from ecommerce.products import Products
+```
+Note: the ecommerce package is located in the same work space where our main.py is. Hence, the above code will work.
+
+### Packages as a whole
+We can import code that appears to come directly from a package, as opposed to a module inside a package. As we'll see, there's a module involved, but it has a special name, so it's hidden.
+
+In this example, we have an ecommerce package containing two module files named "database.py" and "products.py". The database module contains a `db` variable that is accessed from a lot of places. Wouldn't it be convenient if this could be imported as `from ecommerce import db` instead of `from ecommerce.database import db`?
+
+Remember the __init__.py file that defines a directory as a package? This file can contain any variable or class declarations we like, and they will be available as part of the package. In our example, if the ecommerce/__init__.py file contained the following line:
+```python
+    # the __init__.py file in ecommerce
+    from .database import db
+```
+We could then access the `db` attribute from "main.py" or any other file using the following import:
+```python
+    from ecommerce import db
+```
