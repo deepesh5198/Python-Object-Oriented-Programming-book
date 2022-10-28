@@ -7,6 +7,7 @@ This book teaches us how to build robust and maintainable Object Oriented Python
 
 - [Chapter 1 - Object Oriented Design](#chapter1)
 - [Chapter 2 - Objects in Python](#chapter2)
+- [Chapter 3 - When Objects are Alike](#chapter2)
 
 <a name = chapter1>
 <h1>Chapter 1 - Object Oriented Design</h1>
@@ -583,4 +584,311 @@ Python doesn't do this, in python, all methods and attributes are publically ava
 
 **Name mangling** means that the method can still be called by outside objects if they really want to do so, but it requires extra work and is a strong indicator that you demand that your attribute remains **private**.
 
+<a name = chapter3>
+<h1> Chapter 3 - When Objects are Alike</h1>
+</a>
 
+In this chapter we will learn about:
+- Basic Inheritance
+- Inheriting from built-in types
+- Multiple Inheritance
+- Polymnorphism and duck typing
+
+In python, all classes are sbu-classes of the special built-in class named `object`. If we don't explicitly inherit from a different class, our classes will automatically inheri from `object`.
+
+The below two codes are same:
+```python
+    class MySubClass(object):
+        pass
+```
+and
+```python
+    class MySubClass:
+        pass
+```
+Now, the `object` in the parentheses after class name, is called the **superclass** or **parent class**. Superclass, or a parent class is a class that are being inherited from. In the above code `MySubClass` is the **subclass** that inherits from the `object` class. A sublclass is said to be *derived from* its parent class.
+
+**Inheritance** is used to add functionality to an existing class.
+
+Let's see inheritance in action with the help of following program:
+```python
+    class Contact:
+        # define a global list of Contact object
+        all_contacts: List["Contact"] = []
+
+        def __init__(self, name: str, email: str ) -> None:
+            self.name = name
+            self.email = email
+
+            # append the Contact object to the
+            # all_contacts list
+            Contact.all_contacts.append(self)
+
+        def __repr__(self) -> str:
+            """
+            This special method returns a string
+            """
+            return (
+                f"{self.__class__.__name__},("
+                f"{self.name!r},{self.email!r}"
+                f")"
+            )
+```
+The above written code is a contact manager program that tracks the names and email addresses of several people. The `Contact` class is responsible for maintaining a global list of all contacts ever seen in a class variable, and for initializing the name and address for an individual contact.
+
+The `all_contacts` list is a **class variable** because it is part of class definition and is shared by all instances of this class.
+
+Let's see the output of the above written program:
+```
+    >>> c1 = Contact(name = "Adam", email= "adam911@example.com") 
+    >>> c2 = Contact(name = "Tom", email = "thomas@example.com")  
+    >>> Contact.all_contacts
+    [Contact('Adam','adam911@example.com'), Contact('Tom','thomas@example.com')]
+```
+We got the expected output, a list with all contacts (objects of `Contact` class). 
+
+Now let's understand the inheritance with the following code:
+```python
+    class Supplier(Contact):
+    def order(self, order: "Order") -> None:
+        print("If this were real we would send"
+              f"'{order}' order to '{self.name}'"
+            )
+```
+we created a Supplier class that acts like our `Contact` class, but has an additional order method that accepts a yet-to-be-defined `Order` object.
+
+If we run the program, we get following output:
+```
+    >>> c = Contact("Somebody", "somebody@example.net")
+    >>> s = Supplier("Supplier", "supplier@example.net")
+    >>> print(c.name, c.email, s.name, s.email)
+    Somebody somebody@example.net Supplier supplier@example.net
+    >>> from pprint import pprint
+    >>> pprint(c.all_contacts)
+    [Contact('Dusty', 'dusty@example.com'),
+    Contact('Steve', 'steve@itmaybeahack.com'),
+    Contact('Somebody', 'somebody@example.net'),
+    Supplier('Supplier', 'supplier@example.net')]
+    >>> s.order("I need pliers")
+    If this were a real system we would send 'I need pliers' order to 'Supplier' 
+```
+Our `Supplier` class can do everything a contact can do (including adding itself to the list of `Contact.all_contacts`) and all the special things it needs to handle as a supplier. This is inheritance.
+
+Also, note that `Contact.all_contacts` has collected every instance of the `Contact` class as well as the subclass, `Supplier`.
+
+### Inheriting From Built-in types
+Let's add a search functionality to our Contact class by using the built-in `list`
+```python
+    class ContactList(list["Contact"]):
+        #Notice: in parentheses we have list["Contact"]
+        #We are inheriting from built-in list class      
+
+        def search(self, name:str) -> list["Contact"]:
+            matching_contacts: list["Contact"] = []
+            for contact in self:
+                if name in contact.name:
+                    matching_contacts.append(contact)
+
+            return matching_contacts
+    
+    class Contact:
+        """ The Contact class is responsible for
+            maintaining a global list of all contacts ever seen in a class variable,
+            and for initializing the name and address for an individual contact
+            """
+        all_contacts = ContactList()            #this is a class variable
+                                                #this is shared by all instances of this class
+        
+        def __init__(self, name:str, email:str ) -> None:
+            self.name = name
+            self.email = email
+            Contact.all_contacts.append(self)
+            
+        def __repr__(self) -> str:
+            return (
+                f"{self.__class__.__name__}("
+                f"{self.name!r},{self.email!r}"
+                f")"
+                )
+```
+
+In the above code, we added a new class `ContactList` which inherits from `list` built-in type, we wrote `list["Contact"]` to tell the *mypy* that the list is only of `Contact` type instances. We extended the built-in list by adding a `search()` method which takes the `name` as input and returns the list of contacts with that name.
+
+Also, notice, we changed our `all_contacts` definition by replacing the `[]` which is built-in list type with our newly defined extended version of list `ContactList`.
+
+Output:
+```
+    >>> c1 = Contact("John A", "johna@example.net")
+    >>> c2 = Contact("John B", "johnb@sloop.net")
+    >>> c3 = Contact("Jenna C", "cutty@sark.io")
+    >>> [c.name for c in Contact.all_contacts.search('John')]
+    ['John A', 'John B']
+```
+
+Similarly, we can extend most built-in types by inheriting from them. For another example, let's extend the functionality of `dict` for to return the longest key in the dict.
+```python
+    from __future__ import annotations
+
+    #this module is for prtinting list in pep8 manner
+    from pprint import pprint
+
+    #typing module is for Type Hints
+    from typing import Optional, Union
+
+    # In this program we will create a new class
+    # LongNameDict() which will Inherit built-in Dict class and add
+    # new functionality to it to fetch the longest key
+    class LongNameDict(dict[str, Union[str, int]]):
+        def longest_key(self) -> Optional[str]:
+            """In effect, max(self, key = len), but less obscure"""
+            
+            longest = None
+            
+            for key in self:
+                if longest is None or len(key) > len(longest):
+                    longest = key
+                    
+            return longest
+        
+
+    articles_read = LongNameDict()
+    articles_read['monster'] = 42
+    articles_read['bicycle'] = 6
+    articles_read['cat'] = 7
+    articles_read['YEEEEEEEEEET!'] = 90
+
+    #this will print the longest key from articles_read dict
+    print(articles_read.longest_key())
+
+```
+The above code will give the following output:
+```
+    'YEEEEEEEEEET!'
+```
+The output is `'YEEEEEEEEEET!'` because its the longest key in our dictionary.
+
+Also, notice that the hint for the class narrowed the generic `dict` to a more specific `dict[str, Union[str, int]]` which tells, the keys are of type `str` and the values can be of type `str` or `int`.
+
+The result will be a `str` , or possibly `None` . That's why the return type of the `longest_key` method is described as `Optional[str]`.
+
+### Overiding and Super
+We saw, how inheritance can be used to *add* new behaviors, now let's see how we can use it to *change* the behavior of the parent class. 
+
+Our `Contact` class only allows us to keep only names and email addresses, what if we want to add a phone number for our close friends, there is no such functionality in our `Contact` class so lets add it.
+
+We can do this by setting a `phone` attribute on the contact after it is constructed. But to make this variable available on intialization we need to override our `__init__()` method.
+
+Let's see the code below for better understanding:
+```python
+    #This program implements the use of "super()" method 
+    from pprint import pprint
+
+    class Contact:
+        all_contacts = []
+        
+        def __init__(self, name:str, email:str) -> None:
+            self.name = name
+            self.email = email
+            Contact.all_contacts.append(self)
+            
+        def __repr__(self) -> str:
+            return (
+                f"{self.__class__.__name__}("
+                f"{self.name!r},{self.email!r}"
+                f")"
+                )
+            
+    #We want to add Phone number to the contact details for our Friends
+
+    class Friends(Contact):
+        """this class inherits the Contact class
+        and also changes its Behavior
+        
+        *this class does not use super() hence we had to
+        write the code twice for attributes*
+        
+        """
+        
+        def __init__(self, name:str, email:str, phone:str) -> None:
+            self.name = name
+            self.email = email
+            self.phone = phone
+    
+    c1 = Contact(name="Dustin", email="dustiniscool@gmail.com")
+    f1 = Friends(name="Steve", email="steveharington@gmail.com", phone="5534-4422")
+    print(Contact.all_contacts)
+    
+```
+In the above code, we defined a new class `Friends` which is inheriting from our `Contact` class, we are changing behavior of `__init__()` method to accept another attribute `phone`. Let's see the output of this:
+
+```
+    [Contact('Dustin','dustiniscool@gmail.com')]
+```
+Notice, that object of `Friends` was not added to `all_contacts`, it is because, the  `__init__()` of `Friends` class does not have a `Contact.all_contact.append(self)`.
+
+Now, lets see how using `super()` method solves this issue:
+```python
+    class Friends(Contact):
+            """this class inherits the Contact class
+            and also changes its Behavior
+            
+            *this class uses super() hence we did not need
+            to write the code twice for attributes*
+            
+            """
+            
+            def __init__(self, name:str, email:str, phone:str) -> None:
+
+                # we are using super() method
+                # to use the __init__ method of Superclass "Contact"
+                super().__init__(name, email)
+                self.phone = phone
+                
+                #NOTICE: we haven't still touched the __repr__ method of 
+                # our parent class hence THERE WILL BE CONCEQUENCES
+                # **phone number wont be displayed**
+                
+        c1 = Contact(name="Dustin", email="dustiniscool@gmail.com")
+        f1 = Friends(name="Dustin's Friend", email="dustinismyfriend@gmail.com", phone="5555-7898")
+        print(Contact.all_contacts)
+```
+Output:
+```
+    [Contact('Dustin','dustiniscool@gmail.com'), Friends("Dustin's Friend",'dustinismyfriend@gmail.com')]
+```
+We get this output. Now, we can see the object of `Friends` class in our `all_contacts` list. It worked because, we used the `super()` method, which inherited the `__init__()` method of Contact class which has `Contact.all_contact.append(self)`.
+
+But still, the output doesn't seem write, seems like something is missing...Oh yeah! The phone number is still not visible. Well that is because, we did not change the behavior of the `__repr__()` method which is responsible for displaying our contact list. 
+
+Let's change the behavior of `__repr__()` method so it can show us the contact number of our friends:
+```python 
+    class Friends(Contact):
+        """this class inherits the Contact class
+        and also changes its Behavior
+        
+        *this class uses super() hence we did not need
+        to write the code twice for attributes*
+        
+        """
+        
+        def __init__(self, name:str, email:str, phone:str) -> None:
+            super().__init__(name, email)
+            self.phone = phone
+            
+        def __repr__(self) ->str:
+            # here we are changing the behavior of
+            # __repr__ method of Contact class
+            # to make it print phone number
+            return super().__repr__() + (f", {self.phone!r}")
+            
+    c1 = Contact(name="Dustin", email="dustismyfriend@gmail.com")
+    f1 = Friends(name="Steve", email="dustinismyfriend@gmail.com", phone="6969-42069")
+
+    print(Contact.all_contacts)
+```
+Now, let's check the output:
+
+```
+    [Contact('Dustin','dustiniscool@gmail.com'), Friends('Steve','dustinismyfriend@gmail.com'), '6969-42069']
+```
+Finally, we have the expected output. We just changed the behavior of the `__repr__()` method of superclass that is `Contact` to concatenate the phone number to the output of `__repr__()` mehod of superclass.
