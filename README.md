@@ -913,7 +913,7 @@ There are various types of exceptions, such as:
 - **TypeError**: Concatenating **int** type to a **list** type.
 - **IndexError**: When **list** runs out of index.
 - **ZeroDivisionError**: Division by zero.
-- **AttributeError**: When an doesn't have the given attribute.
+- **AttributeError**: When an object doesn't have the given attribute.
 
 You can get all of these exceptions by running these functions, one-by-one:
 ```py
@@ -1119,7 +1119,7 @@ Utility of custom exceptions truly comes to light when creating a framework, lib
 - The client programmer should easily see how to fix the error (if it reflects a bug in their code) or handle the exception (if it's a situation they need to be made aware of).
 - The handling should be distinct from other exceptions. If the handling is the same as an existing exception, reusing the existing exception is best.
 
-#### When defining execptionns keep following things in mind:
+#### When defining execptions keep following things in mind:
 - Know when you want to define your own exception.
 - Do not define an exception if it's going to handle exactly like the built-in exceptions. For Example: there is no point in defining an exception that's handled exactly like `ValueError` when can simply use `ValueError`.
 - Do not use `BaseException` class for creating your own exceptions.
