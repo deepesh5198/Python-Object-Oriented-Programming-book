@@ -7,7 +7,8 @@ This book teaches us how to build robust and maintainable Object Oriented Python
 
 - [Chapter 1 - Object Oriented Design](#chapter1)
 - [Chapter 2 - Objects in Python](#chapter2)
-- [Chapter 3 - When Objects are Alike](#chapter2)
+- [Chapter 3 - When Objects are Alike](#chapter3)
+- [Chapter 4 - Expecting the Unexpected](#chapter4)
 
 <a name = chapter1>
 <h1>Chapter 1 - Object Oriented Design</h1>
@@ -892,3 +893,334 @@ Now, let's check the output:
     [Contact('Dustin','dustiniscool@gmail.com'), Friends('Steve','dustinismyfriend@gmail.com'), '6969-42069']
 ```
 Finally, we have the expected output. We just changed the behavior of the `__repr__()` method of superclass that is `Contact` to concatenate the phone number to the output of `__repr__()` mehod of superclass.
+
+<a name = chapter4>
+<h1> Chapter 4 - Expecting the Unexpected</h1>
+</a>
+
+This chapter is about python exceptions and how to handle them.
+**Exceptions** are special error objects raised when a normal response is impossible. We will learn the following things in this chapter:
+- How to cause an exception to occur
+- How to recover when an exception has occurred (Handling Exception)
+- How to handle different exception types in different ways (Ways to handle)
+- Cleaning up when an exception has occurred (`finally` syntax)
+- Creating new types of exceptions.
+- Using the exception syntax for flow control (makes things easier)
+
+### How to cause an exception to occur?
+There are various types of exceptions, such as:
+- **SyntaxError**: When we write wrong syntax.
+- **TypeError**: Concatenating **int** type to a **list** type.
+- **IndexError**: When **list** runs out of index.
+- **ZeroDivisionError**: Division by zero.
+- **AttributeError**: When an doesn't have the given attribute.
+
+You can get all of these exceptions by running these functions, one-by-one:
+```py
+    # Types of Exceptions:
+
+    # SyntaxError
+    def syntaxError():
+        print "2"
+        # pass
+
+    # ZeroDivisionError
+    def zeroDivision():
+        print(2/0)
+
+    # IndexError
+    def indexError():
+        arr = [1,2,3,4,5]
+        print(arr[5])
+
+    # TypeError
+    def typeError():
+        arr = [1,2]
+        print(arr + 3)
+
+    # AttributeError
+    def attributeError():
+        my_string = "Hello Abrenion!"
+        print(my_string.reverse())
+```
+
+### Raising Exceptions
+- We raise exceptions when we want to inform the client or user of our program about what they should do and what they shouldn't.
+- We raise exceptions with the help of `raise` keyword and an exception object like
+```py
+    raise TypeError("Wrong type only int type is allowed")
+```
+Let's understand this by an example of a list that only accepts odd integers value:
+```python
+    # Creating a list that only accepts odd integers
+    from typing import List
+    # we are inheriting from the List class
+    # and changing it to only accept
+    # odd integers
+    class OddList(List["int"]):
+        def append(self, value: int) -> None:
+            if not isinstance(value, int):
+                raise TypeError("Only int type can be appended")
+
+            if value %2==0:
+                raise TypeError("Only odd integers can be appended")
+
+            super().append(value)
+
+    odd_list = OddList()
+    odd_list.append(5)
+    odd_list.append(8)
+```
+#### Effects of Exception
+
+Code after the exception is not executed.
+```py
+    # Effect of an Exception
+    # The remaining program doesn't execute after Exception is caught.
+    from typing import NoReturn
+
+    def never_return() -> NoReturn:
+        print(" I am going to raise an Exception")
+
+        raise Exception("Oops! I am an exception, I got raised.")
+        print(" We are code after the exception occured :(")
+        print(" We cannot be executed :'(")
+
+    never_return()
+```
+
+### Handling Exceptions
+Here, we will learn how to recover from an exception, if it occurs. For handling exceptions, just simply wrap the code that is prone to exception in a `try...except` clause.
+
+See this example:
+```py
+    # The try...except clause, handles the exception if caught
+    from typing import NoReturn, Union
+
+    def never_return() -> NoReturn:
+        print("I am going to raise an Exception")
+
+        raise Exception("Oops! I am an exception, I got raised.")
+        print(" We are code after the exception occured :(")
+        print(" We cannot be executed :'(")
+
+    def exception_handler():
+        try:
+            print("We are in try block")
+            print("We try this code, if exception is caught! 'except' will handle it")
+            never_return()
+
+        except Exception as ex:
+            print(f"I caught an exception: {ex!r}")
+        print("I am executed because, exception was handled")
+```
+Output of the above code will be:
+```
+    We are in try block
+    We try this code, if exception is caught! 'except' will handle it
+    I am going to raise an Exception
+    I caught an exception: Exception('Oops! I am an exception, I got raised.')
+    I am executed because, exception was handled
+```
+Explanation: we get in try block, we try some code which is prone to exception the `never_return()` function, which raises an exception. The `except` block catches the exception and tell's what was the exception. And the program continues to execute because the exception was handled.
+
+### Handling Multiple Exceptions
+We can handle multiple exceptions at once too. See the following example:
+```py
+    # Handling Multiple Exceptions
+    def funny_division(divisor: int) -> Union[str, float]:
+    try:
+    if divisor == 13:
+        raise ValueError("13 is an unlucky number")
+        return 100 / divisor
+    except (ZeroDivisionError, TypeError):
+        return "Enter a number other than zero"
+```
+To handle the multiple exceptions, we write the name of exception classes after the `except` keyword in parantheses like `except (ZeroDivisionError, TypeError)`. But in this code we are handling both ZeroDivisionError & TypeError exceptions in same way.
+
+#### Handling each exceptions differently
+```py
+    def funniest_division(divisor: int) -> Union[str, float]:
+        try:
+            if divider == 13:
+                raise ValueError("13 is an unlucky number")
+                return 100 / divider
+            except ZeroDivisionError:
+                return "Enter a number other than zero"
+            except TypeError:
+                return "Enter a numerical value"
+            except ValueError:
+                print("No, No, not 13!")
+                raise
+```
+The above code handles each exception in different way by returning different messages.
+
+### `finally` and `else`
+- `else`: The code in `else` executed when no exception occurs.
+- `finally`: The code in `finally` always executes regardless of any exception. The `finally` clause generally works along with **context manager**, for example: When we want to close the file if the exception has occured. **we must always close the file that we open**.
+
+The following example iterates through a number of exception classes, raising an instance of each:
+```py
+    some_exceptions = [ValueError, TypeError, IndexError, None]
+    for choice in some_exceptions:
+        try:
+            print(f"\nRaising {choice}")
+            if choice:
+                raise choice("An error")
+            else:
+                print("no exception raised")
+        except ValueError:
+            print("Caught a ValueError")
+        except TypeError:
+            print("Caught a TypeError")
+        except Exception as e:
+            print(f"Caught some other error: {e.__class__.__name__}")
+        else:
+            print("This code called if there is no exception")
+        finally:
+            print("This cleanup code is always called")
+```
+We get following output:
+```
+    Raising <class 'ValueError'>
+    Caught a ValueError
+    This cleanup code is always called
+    Raising <class 'TypeError'>
+    Caught a TypeError
+    This cleanup code is always called
+    Raising <class 'IndexError'>
+    Caught some other error: IndexError
+    This cleanup code is always called
+    Raising None
+    no exception raised
+    This code called if there is no exception
+    This cleanup code is always called
+```
+We can see the `finally` clause is executed in each iteration, the `else` clause was executed when there was no exception.
+
+The `finally` is specially used for following tasks when our code has finished running (even if an exception has occurred).
+- Cleaning up an open database connection
+- Closing an open file
+- Sending a closing handshake over the network
+
+### The Exception Hierarchy
+- "Most exceptions are subclasses of `Exception` class, but not all."
+- The `Exception` class is itself a subclass of the `BaseException` class. 
+
+There are two built-in exception classes, the `SystemExit` and `KeyboardInterrupt`, that derive directly from `BaseException` class, all other are derived from `Eception` class which itself is derived from `BaseException` class. 
+
+The below diagram makes everything clear.
+![Alt text](./images/exception_hierarchy.jpeg?web=raw "exception hierarchy")
+
+### Defining Our Own Exceptions
+#### Why do I need to define my own exception?
+Utility of custom exceptions truly comes to light when creating a framework, library, or API that is intended for access by other programmers. In that case, be careful to ensure your code is raising exceptions that make sense to the client programmer. Here are some criteria:
+- They should clearly describe what went on. The `KeyError` exception, for example, provides the key that could not be found.
+- The client programmer should easily see how to fix the error (if it reflects a bug in their code) or handle the exception (if it's a situation they need to be made aware of).
+- The handling should be distinct from other exceptions. If the handling is the same as an existing exception, reusing the existing exception is best.
+
+#### When defining execptionns keep following things in mind:
+- Know when you want to define your own exception.
+- Do not define an exception if it's going to handle exactly like the built-in exceptions. For Example: there is no point in defining an exception that's handled exactly like `ValueError` when can simply use `ValueError`.
+- Do not use `BaseException` class for creating your own exceptions.
+- Also do not use bare `except` (except without "exception class" is by default `BaseException`).
+- Use `Exception` class instead.
+
+#### Why can I not derive from `BaseException`directly?
+Because, special classes like `SystemExit` and `KeyboardInterrupt` are derived directly from `BaseException` class. The `SystemExit` exception is raised whenever the program exits naturally, typically because we called the sys.exit() function somewhere in our code (for example, when the user selected an exit menu item, clicked the Close button on a window. This exception is designed to allow us to clean up code before the program ultimately exits.
+
+And we do not want to catch this exception, it can shut down your running program even before finishing. Hence, it is adviced to use the `Exception` class which has no such subclasses.
+
+#### Why can I not use bare `except`?
+When we use the `except:` clause without specifying any type of exception, it will catch all subclasses of `BaseException`; which is to say, it will catch all exceptions, including the two special ones. Since, we almost always want these to get special treatment, it is unwise to use the `except:` statement without arguments. If you want to catch all exceptions (other than `SystemExit` and `KeyboardInterrupt` ), always explicitly catch Exception. 
+
+### Example for creating own exception
+```py
+    # Creating own exceptions is very trivial
+    # just make sure to use Exception as super class
+    # do not use BaseException class, you know why!
+
+    class InvalidWithdrawal(ValueError):
+        # New exception class that is inherited from
+        # ValueError exception class
+        pass
+
+    raise InvalidWithdrawal("You don't have 50 Rs. in your account!")
+```
+This will give the following output:
+```
+    Traceback (most recent call last):
+    File "<input>", line 1, in <module>
+    InvalidWithdrawal: You don't have 50 Rs. in your account!
+```
+
+- We can pass an arbitrary number of arguments into the exception.
+- Often a string message is used as an argument.
+- Any object that might be useful in later exception handler can be stored.
+- The `__init__` method of `Exception` class is designed to accept any arguments.
+- The `__init__` method of `Exception` can store the arguments as a tuple in an attribute named `args`. This makes exceptions easier to define without needing to override the `__init__()` method.
+
+#### Making our `InvalidWithdrawal` exception better
+Here's a an updated version of the above exception whose initializer accepts the current balance and the amount the user wants to withdraw:
+
+```py
+    from decimal import Decimal
+    class InvalidWithdrawal(ValueError):
+        def __init__(self, balance: Decimal, amount: Decimal) -> None:
+            super().__init__(f"account doesn't have {amount} Rs.") 
+            self.amount = amount 
+            self.balance = balance 
+        
+        def overage(self) -> Decimal:
+            return self.amount - self.balance
+```
+This will give following output:
+```
+    >>> raise InvalidWithdrawal(Decimal('25.00'), Decimal('50.00'))
+    Traceback (most recent call last):
+    ...
+    InvalidWithdrawal: account doesn't have 50.00 Rs.
+```
+And we can handle this exception as follows:
+
+```python
+    try: 
+        balance = Decimal('25.00')
+        raise InvalidWithdrawal(balance, Decimal('50.00'))
+
+    except InvalidWithdrawal as ex: 
+        print("I'm sorry, but your withdrawal is "\
+                "more than your balance by "\
+                f"{ex.overage()} Rs.") 
+```
+
+### Using Exception Handling for Flow Control
+One of the most cool application of exception handling is flow control. We can use exception handling like `if...else...`.
+
+The code below shows how they are identical:
+```py
+    def divide_with_exception(dividend: int, divisor: int) -> None:
+        try:
+            print(f"{dividend / divisor=}")
+        except ZeroDivisionError:
+            print("You can't divide by zero")
+
+    def divide_with_if(dividend: int, divisor: int) -> None:
+        if divisor == 0:
+            print("You can't divide by zero")
+        else:
+            print(f"{dividend / divisor=}")
+```
+In the above code, we defined two functions, one that uses Exception Handling and the other which uses if...else... clauses. The output of both function is gonna be same.
+
+In this example, the test for a valid division is relatively simple-looking (`divisor == 0`). In some cases, it can be rather complex. In some cases, it may involve computing intermediate results. In the worst cases, the test for "will this work?" involves using a number of other methods of a class to –in effect – dry-run the operation to see if there would be an error along the way.
+
+**"It's Easier to Ask Forgiveness Than Permission"**
+This is the principle on which flow controling with "Exception Handling" works. The point of it is to execute the code and then deal with anything that goes wrong.
+>It is wise to use exceptions for exceptional circumstances, even if those circumstances are only a little bit exceptional.
+
+### Consider this Example
+Imagine an inventory application for a company that sells widgets and gadgets. When a customer makes a purchase, the item can either be available, in which case the item is removed from inventory and the number of items left is returned, or it might be out of stock. Now, being out of stock is a perfectly normal thing to happen in an inventory application. It is certainly not an exceptional circumstance. But what do we return if it's out of stock? A string saying "out of stock"? A negative number? In both cases, the calling method would have to check whether the return value is a positive integer or
+something else, to determine if it is out of stock. That seems a bit messy, especially if we forget to do it somewhere in our code.
+
+Instead, we can raise an OutOfStock exception and use the try statement to direct program flow control. Make sense?
